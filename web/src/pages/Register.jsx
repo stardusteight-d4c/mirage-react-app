@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import axios from 'axios'
+
 import styled from 'styled-components'
 import Logo from '../assets/logo.svg'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import { registerRoute } from '../utils/api-routes'
 
 export const Register = () => {
+  const navigate = useNavigate()
+
   const [values, setValues] = useState({
     username: '',
     email: '',
@@ -21,15 +26,31 @@ export const Register = () => {
     theme: 'dark',
   }
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault()
-    handleValidation()
+    if (handleValidation()) {
+      console.log('in validation', registerRoute)
+      const { username, email, password } = values
+      const { data } = await axios.post(registerRoute, {
+        username,
+        email,
+        password,
+      })
+      console.log(data)
+      if (data.status === false) {
+        toast.error(data.msg, toastOptions)
+      }
+      if (data.status === true) {
+        localStorage.setItem('mirage-app-user', JSON.stringify(data.user))
+        navigate('/')
+      }
+    }
   }
 
   const handleValidation = () => {
     const { username, email, password, confirmPassword } = values
     if (password !== confirmPassword) {
-      toast.error('A confirmação da senha está invalida!', toastOptions)
+      toast.error('A confirmação da senha deve ser valida!', toastOptions)
       return false
     } else if (username.length < 3) {
       toast.error(
@@ -37,13 +58,14 @@ export const Register = () => {
         toastOptions
       )
       return false
+    } else if (email === '') {
+      toast.error('Campo email é obrigatório', toastOptions)
+      return false
     } else if (password.length < 8) {
       toast.error('A senha deve conter pelo menos 8 caracteres', toastOptions)
       return false
-    } else if (email === "") {
-      toast.error('Campo email é obrigatório', toastOptions)
-      return false
     }
+    return true
   }
 
   const handleChange = (event) => {
@@ -56,7 +78,7 @@ export const Register = () => {
         <form onSubmit={(e) => handleSubmit(e)}>
           <div className="brand">
             <img src={Logo} alt="logo/torpedo" />
-            <h1>Torpedo</h1>
+            <h1>Mirage</h1>
           </div>
           <input
             type="text"
@@ -82,9 +104,9 @@ export const Register = () => {
             name="confirmPassword"
             onChange={(e) => handleChange(e)}
           />
-          <button type="submit">Create User</button>
+          <button type="submit">Criar usuário</button>
           <span>
-            Already have an account? <Link to="/login">Login</Link>
+            Já possui uma conta? <Link to="/login">Entrar</Link>
           </span>
         </form>
         <ToastContainer />
@@ -99,9 +121,8 @@ const FormWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 1rem;
   align-items: center;
-  background-color: #131324;
+  background-color: #212121;
   .brand {
     display: flex;
     align-items: center;
@@ -118,25 +139,27 @@ const FormWrapper = styled.div`
   form {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
-    background-color: #00000076;
-    border-radius: 2rem;
-    padding: 3rem 5rem;
+    gap: 1.5rem;
+    background-color: #343434;
+    border-radius: 1.5rem;
+    padding: 3rem 4rem;
+    box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px,
+      rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
     input {
       background-color: transparent;
-      padding: 1rem;
-      border: 0.1rem solid #4e0eff;
-      border-radius: 0.4rem;
+      padding: 0.8rem;
+      border: 0.1rem solid #b13a6d;
+      border-radius: 0.3rem;
       color: white;
       width: 100%;
       font-size: 1rem;
       &:focus {
-        border: 0.1rem solid #997af0;
+        border: 0.1rem solid #b13a6d;
         outline: none;
       }
     }
     button {
-      background-color: #997af0;
+      background-color: #b13a6d;
       color: white;
       padding: 1rem 2rem;
       border: none;
@@ -147,7 +170,7 @@ const FormWrapper = styled.div`
       text-transform: uppercase;
       transition: 0.5s ease-in-out;
       &:hover {
-        background-color: #4e0eff;
+        background-color: #ff0570;
       }
     }
     span {
@@ -155,7 +178,7 @@ const FormWrapper = styled.div`
       text-transform: uppercase;
       a {
         text-decoration: none;
-        color: #4e0eff;
+        color: #b13a6d;
         text-transform: none;
         font-weight: bold;
       }
