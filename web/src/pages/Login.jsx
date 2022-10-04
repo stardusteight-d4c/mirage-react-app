@@ -24,6 +24,12 @@ export const Login = () => {
     theme: 'dark',
   }
 
+  useEffect(() => {
+    if (localStorage.getItem('mirage-app-user')) {
+      navigate('/')
+    }
+  }, [])
+
   const handleSubmit = async (event) => {
     event.preventDefault()
     if (handleValidation()) {
@@ -84,7 +90,7 @@ export const Login = () => {
     
           <button type="submit">Entrar</button>
           <span>
-            Não possui uma conta? <Link to="/login">Criar conta</Link>
+            Não possui uma conta? <Link to="/register">Criar conta</Link>
           </span>
         </form>
         <ToastContainer />

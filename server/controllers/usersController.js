@@ -1,13 +1,11 @@
 import userModel from '../model/userModel.mjs'
 import brcypt from 'bcrypt'
 
-const User = userModel()
-
 export const register = async (req, res, next) => {
   try {
     const { username, email, password } = req.body
     const usernameCheck = await userModel.findOne({ username })
-    console.log('usernameCheck', usernameCheck);
+    console.log('usernameCheck', usernameCheck)
     const emailCheck = await userModel.findOne({ email })
     if (usernameCheck) {
       return res.json({ msg: 'username already used', status: false })
@@ -41,6 +39,24 @@ export const login = async (req, res, next) => {
     }
     delete user.password
     return res.json({ status: true, user })
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const chooseAvatar = async (req, res, next) => {
+  try {
+    const userId = req.params.id
+    const avatarImage = req.body.image
+    console.log(userId);
+    const userData = await userModel.findByIdAndUpdate(userId, {
+      isAvatarImageSet: true,
+      avatarImage,
+    })
+    return res.json({
+      isSet: userData.isAvatarImageSet,
+      image: userData.avatarImage,
+    })
   } catch (error) {
     next(error)
   }

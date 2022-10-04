@@ -1,6 +1,7 @@
 import React from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { Register, Login, Chat  } from './pages'
+import { ChooseAvatar } from './pages/ChooseAvatar'
 
 function App() {
   return (
@@ -8,6 +9,7 @@ function App() {
       <Routes>
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/chooseAvatar" element={<ChooseAvatar />} />
         <Route path="/" element={<Chat />} />
       </Routes>
     </BrowserRouter>

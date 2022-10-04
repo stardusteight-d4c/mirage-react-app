@@ -26,6 +26,12 @@ export const Register = () => {
     theme: 'dark',
   }
 
+  useEffect(() => {
+    if (localStorage.getItem('mirage-app-user')) {
+      navigate('/')
+    }
+  }, [])
+
   const handleSubmit = async (event) => {
     event.preventDefault()
     if (handleValidation()) {
