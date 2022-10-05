@@ -1,19 +1,63 @@
-import React from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import { ChatInput } from './ChatInput'
 import { Logout } from './Logout'
 import { Messages } from './Messages'
 import axios from 'axios'
-import { sendMessageRoute } from '../utils/api-routes'
+import { allMessagesRoute, sendMessageRoute } from '../utils/api-routes'
+import { v4 as uuiv4 } from 'uuid'
 
-export const ChatContainer = ({ currentChat, currentUser }) => {
+export const ChatContainer = ({ currentChat, currentUser, socket }) => {
+  const [messages, setMessages] = useState([])
+  const [arrivalMessage, setArrivalMessage] = useState(null)
+  const scrollRef = useRef()
+
   const handleSendMsg = async (msg) => {
     await axios.post(sendMessageRoute, {
       from: currentUser._id,
       to: currentChat._id,
       message: msg,
     })
+    socket.current.emit('send-msg', {
+      to: currentChat._id,
+      from: currentUser._id,
+      message: msg,
+    })
+
+    const msgs = [...messages]
+    msgs.push({ fromSelf: true, message: msg })
+    setMessages(msgs)
+    console.log(msgs)
   }
+
+  useEffect(() => {
+    if (socket.current) {
+      socket.current.on('msg-recieve', (msg) => {
+        setArrivalMessage({ fromSelf: false, message: msg })
+      })
+    }
+  }, [])
+
+  useEffect(() => {
+    arrivalMessage && setMessages((prev) => [...prev, arrivalMessage])
+  }, [arrivalMessage])
+
+  useEffect(() => {
+    scrollRef.current?.scrollIntoView({ behaviour: 'smooth' })
+  }, [messages])
+
+  useEffect(() => {
+    async function sendMessage() {
+      const response = await axios.get(allMessagesRoute, {
+        params: {
+          from: currentUser._id,
+          to: currentChat._id,
+        },
+      })
+      setMessages(response.data)
+    }
+    sendMessage()
+  }, [currentChat])
 
   return (
     <>
@@ -33,7 +77,21 @@ export const ChatContainer = ({ currentChat, currentUser }) => {
             </div>
             <Logout />
           </div>
-          <Messages />
+          <div className="chat-messages">
+            {messages.map((message) => (
+              <div ref={scrollRef} key={uuiv4()}>
+                <div
+                  className={`message ${
+                    message.fromSelf ? 'sended' : 'recieved'
+                  }`}
+                >
+                  <div className="content">
+                    <p>{message.message}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
           <ChatInput handleSendMsg={handleSendMsg} />
         </Wrapper>
       )}
@@ -67,6 +125,38 @@ const Wrapper = styled.div`
         h3 {
           color: white;
         }
+      }
+    }
+  }
+  .chat-messages {
+    padding: 1rem 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    overflow: auto;
+    .message {
+      display: flex;
+      align-items: center;
+      .content {
+        max-height: 40%;
+        max-width: 50%;
+        overflow-wrap: break-word;
+        padding: 1rem;
+        font-size: 1.1rem;
+        border-radius: 1rem;
+        color: #d1d1d1d1;
+      }
+    }
+    .sended {
+      justify-content: flex-end;
+      .content {
+        background-color: #4f04ff21;
+      }
+    }
+    .recieved {
+      justify-content: flex-start;
+      .content {
+        background-color: #4f8eff;
       }
     }
   }

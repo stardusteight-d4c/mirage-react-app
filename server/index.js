@@ -4,6 +4,7 @@ import mongoose from 'mongoose'
 import dotenv from 'dotenv'
 import { router as userRoutes } from './routes/userRoutes.mjs'
 import { router as messagesRoutes } from './routes/messagesRoutes.mjs'
+import { Server } from 'socket.io'
 
 const app = express()
 dotenv.config()
@@ -28,4 +29,27 @@ mongoose
 
 const server = app.listen(process.env.PORT, () => {
   console.log(`Server listeing on PORT: ${process.env.PORT}`)
+})
+
+const io = new Server(server, {
+  cors: {
+    origin: 'http://localhost:5173',
+    credentials: true,
+  },
+})
+
+global.onlineUsers = new Map()
+
+io.on('connection', (socket) => {
+  global.chatSocket = socket
+  socket.on('add-user', (userId) => {
+    onlineUsers.set(userId, socket.id)
+  })
+
+  socket.on('send-msg', (data) => {
+    const sendUserSocket = onlineUsers.get(data.to)
+    if (sendUserSocket) {
+      socket.to(sendUserSocket).emit('msg-recieve', data.msg)
+    }
+  })
 })

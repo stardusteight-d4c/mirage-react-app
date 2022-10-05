@@ -19,7 +19,7 @@ export const addMessage = async (req, res, next) => {
 
 export const getAllMessage = async (req, res, next) => {
   try {
-    const { from, to } = req.body
+    const { from, to } = req.query
     const messages = await messageModel
       .find({
         users: {
