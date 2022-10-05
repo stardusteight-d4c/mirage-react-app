@@ -33,7 +33,7 @@ export const login = async (req, res, next) => {
     if (!user) {
       return res.json({ msg: 'Incorrect username or password', status: false })
     }
-    const isPasswordValid = brcypt.compare(password, user.password)
+    const isPasswordValid = await brcypt.compare(password, user.password)
     if (!isPasswordValid) {
       return res.json({ msg: 'Incorrect username or password', status: false })
     }
@@ -48,7 +48,7 @@ export const chooseAvatar = async (req, res, next) => {
   try {
     const userId = req.params.id
     const avatarImage = req.body.image
-    console.log(userId);
+    console.log(userId)
     const userData = await userModel.findByIdAndUpdate(userId, {
       isAvatarImageSet: true,
       avatarImage,
@@ -57,6 +57,17 @@ export const chooseAvatar = async (req, res, next) => {
       isSet: userData.isAvatarImageSet,
       image: userData.avatarImage,
     })
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const getAllUsers = async (req, res, next) => {
+  try {
+    const users = await userModel
+      .find({ _id: { $ne: req.params.id } })
+      .select(['email', 'username', 'avatarImage', '_id'])
+    return res.json(users)
   } catch (error) {
     next(error)
   }
