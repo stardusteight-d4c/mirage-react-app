@@ -8,7 +8,7 @@ import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { chooseAvatarRoute } from '../utils/api-routes'
 
-export const ChooseAvatar = () => {
+const ChooseAvatar = () => {
   const [avatars, setAvatars] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [selectedAvatar, setSelectedAvatar] = useState(undefined)
@@ -164,3 +164,5 @@ const Wrapper = styled.div`
     }
   }
 `
+
+export default ChooseAvatar

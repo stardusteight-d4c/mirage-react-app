@@ -8,7 +8,7 @@ import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { registerRoute } from '../utils/api-routes'
 
-export const Register = () => {
+const Register = () => {
   const navigate = useNavigate()
 
   const [values, setValues] = useState({
@@ -191,3 +191,5 @@ const FormWrapper = styled.div`
     }
   }
 `
+
+export default Register

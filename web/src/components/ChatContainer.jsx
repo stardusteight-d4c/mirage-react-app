@@ -7,7 +7,7 @@ import axios from 'axios'
 import { allMessagesRoute, sendMessageRoute } from '../utils/api-routes'
 import { v4 as uuiv4 } from 'uuid'
 
-export const ChatContainer = ({ currentChat, currentUser, socket }) => {
+const ChatContainer = ({ currentChat, currentUser, socket }) => {
   const [messages, setMessages] = useState([])
   const [arrivalMessage, setArrivalMessage] = useState(null)
   const scrollRef = useRef()
@@ -75,7 +75,6 @@ export const ChatContainer = ({ currentChat, currentUser, socket }) => {
                 <h3>{currentChat.username}</h3>
               </div>
             </div>
-            <Logout />
           </div>
           <div className="chat-messages">
             {messages.map((message) => (
@@ -101,8 +100,9 @@ export const ChatContainer = ({ currentChat, currentUser, socket }) => {
 
 const Wrapper = styled.div`
   display: grid;
-  grid-template-rows: 10% 80% 10%;
+  grid-template-rows: 15% 65% 20%;
   gap: 0.1rem;
+  background-color: #17181a;
   overflow: hidden;
   @media screen and (min-width: 720px) and (max-width: 1080px) {
     grid-template-rows: 15% 70% 15%;
@@ -112,6 +112,7 @@ const Wrapper = styled.div`
     justify-content: space-between;
     align-items: center;
     padding: 0 2rem;
+    background-color: #17181a;
     .user-details {
       display: flex;
       align-items: center;
@@ -134,6 +135,14 @@ const Wrapper = styled.div`
     flex-direction: column;
     gap: 1rem;
     overflow: auto;
+    &::-webkit-scrollbar {
+    width: 0.2rem;
+    &-thumb {
+      background-color: #ffffff39;
+      width: 0.1rem;
+      border-radius: 1rem;
+    }
+  }
     .message {
       display: flex;
       align-items: center;
@@ -141,23 +150,28 @@ const Wrapper = styled.div`
         max-height: 40%;
         max-width: 50%;
         overflow-wrap: break-word;
-        padding: 1rem;
+        padding-inline: 1rem;
+        padding-block: .3rem;
         font-size: 1.1rem;
         border-radius: 1rem;
-        color: #d1d1d1d1;
+        color: white;
       }
     }
     .sended {
       justify-content: flex-end;
       .content {
-        background-color: #4f04ff21;
+        border-radius: 15px 0px 15px 15px;
+        background-color: #0a8ad7;
       }
     }
     .recieved {
       justify-content: flex-start;
       .content {
-        background-color: #4f8eff;
+        border-radius: 0px 15px 15px 15px;
+        background-color: #0a8ad7;
       }
     }
   }
 `
+
+export default ChatContainer

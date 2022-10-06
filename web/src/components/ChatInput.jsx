@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import { IoMdSend } from 'react-icons/io'
+import { RiSendPlaneFill } from 'react-icons/ri'
 import { BsEmojiSmileFill } from 'react-icons/bs'
 
 export const ChatInput = ({ handleSendMsg }) => {
@@ -33,7 +33,7 @@ export const ChatInput = ({ handleSendMsg }) => {
           {/* {showEmojiPicker && <Picker />} */}
         </div>
       </div>
-      <form className="input-container" onSubmit={(event) => sendChat(event)}>
+      <Input onSubmit={(event) => sendChat(event)}>
         <input
           type="text"
           placeholder="Digite sua mensagem"
@@ -41,9 +41,9 @@ export const ChatInput = ({ handleSendMsg }) => {
           value={msg}
         />
         <button className="submit">
-          <IoMdSend />
+          <RiSendPlaneFill />
         </button>
-      </form>
+      </Input>
     </Wrapper>
   )
 }
@@ -52,7 +52,7 @@ const Wrapper = styled.div`
   display: grid;
   grid-template-columns: 5% 95%;
   align-items: center;
-  background-color: #080420;
+  background-color: #17181a;
   padding: 0 2rem;
   padding-bottom: 0.3rem;
   .button-container {
@@ -68,41 +68,41 @@ const Wrapper = styled.div`
       }
     }
   }
-  .input-container {
-    width: 100%;
+`
+
+const Input = styled.form`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  input {
+    background-color: #282b30;
     border-radius: 2rem;
-    display: flex;
-    align-items: center;
-    gap: 2rem;
-    background-color: #ffffff34;
-    input {
-      width: 90%;
-      height: 60%;
-      background-color: transparent;
-      color: white;
-      border: none;
-      padding-left: 1rem;
-      font-size: 1.2rem;
-      &::selection {
-        background-color: #9186f3;
-      }
-      &:focus {
-        outline: none;
-      }
+    width: 80%;
+    padding: 1rem;
+    color: white;
+    border: none;
+    font-size: 1.2rem;
+    &::selection {
+      background-color: #0a8ad7;
     }
-    button {
-      padding: 0.3rem 2rem;
-      border-radius: 2rem;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background-color: #9a86f3;
-      border: none;
-      cursor: pointer;
-      svg {
-        font-size: 2rem;
-        color: white;
-      }
+    &:focus {
+      outline: none;
+    }
+  }
+  button {
+    border-radius: 100%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #0a8ad7;
+    border: none;
+    cursor: pointer;
+    svg {
+      font-size: 1.5rem;
+      color: white;
     }
   }
 `

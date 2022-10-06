@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
-import Logo from '../assets/logo.svg'
+import { BsSearch } from 'react-icons/bs'
+import { AiFillStar, AiOutlineCloudDownload } from 'react-icons/ai'
 
 export const Contacts = ({ contacts, currentUser, changeChat }) => {
   const [currentSelected, setCurrentSelected] = useState(undefined)
@@ -12,130 +13,172 @@ export const Contacts = ({ contacts, currentUser, changeChat }) => {
 
   return (
     <>
-      {currentUser?.avatarImage && currentUser.username && (
-        <Wrapper>
-          <div className="brand">
-            <img src={Logo} alt="logo/img" />
-            <h3>Mirage</h3>
-          </div>
-          <div className="contacts">
-            {contacts.map((contact, index) => (
-              <div
-                onClick={() => changeCurrentChat(index, contact)}
-                className={`contact ${index === currentSelected && 'selected'}`}
-                key={index}
-              >
-                <div className="avatar">
-                  <img
-                    src={`data:image/svg+xml;base64,${contact.avatarImage}`}
-                    alt="user/avatar"
-                  />
-                </div>
-                <div className="username">
-                  <h3>{contact.username}</h3>
-                </div>
+      <Wrapper>
+        <Header>
+          <div>
+            <div className="search-container">
+              <div className="search-input">
+                <BsSearch />
+                <input type="text" placeholder="Buscar conversa..." />
               </div>
-            ))}
-          </div>
-          <div className="current-user">
-            <div className="avatar">
-              <img
-                src={`data:image/svg+xml;base64,${currentUser?.avatarImage}`}
-                alt="user/avatar"
-              />
+              <div className="icons">
+                <AiFillStar />
+                <AiOutlineCloudDownload />
+              </div>
             </div>
-            <div className="username">
-              <h2>{currentUser?.username}</h2>
+            <div className="options">
+              <span>Mensagens</span>
+              <span>Grupos</span>
             </div>
           </div>
-        </Wrapper>
-      )}
+        </Header>
+        <ContactsContainer>
+          {contacts.map((contact, index) => (
+            <div
+              onClick={() => changeCurrentChat(index, contact)}
+              className={`contact ${index === currentSelected && 'selected'}`}
+              key={index}
+            >
+              <div className="avatar">
+                <img
+                  src="https://avatarfiles.alphacoders.com/161/thumb-161326.png"
+                  // src={`data:image/svg+xml;base64,${contact.avatarImage}`}
+                  alt="user/avatar"
+                />
+              </div>
+              <div className="username">
+                <h3>{contact.username}</h3>
+              </div>
+            </div>
+          ))}
+        </ContactsContainer>
+      </Wrapper>
     </>
   )
 }
 
-const Wrapper = styled.div`
-  display: grid;
-  grid-template-rows: 10% 75% 15%;
+const Wrapper = styled.section`
   overflow: hidden;
-  background-color: #080420;
-  .brand {
+  background: #17181a;
+`
+
+const Header = styled.header`
+  color: white;
+  border-bottom: solid 1px rgba(255, 255, 255, 0.18);
+  .options {
+    width: 100%;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
-    img {
-      height: 2rem;
-    }
-    h3 {
-      color: white;
-      text-transform: uppercase;
+    flex-direction: row;
+    gap: 35px;
+    margin-left: 15px;
+    span {
+      border-bottom: solid 2px transparent;
+      &:hover {
+        border-bottom: solid 2px blue;
+      }
     }
   }
-  .contacts {
+  .search-container {
+    background-color: #17181a;
+    margin-top: 25px;
+    padding-bottom: 5%;
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    overflow: auto;
-    gap: 0.8rem;
-    &::-webkit-scrollbar {
-      width: 0.2rem;
-      &-thumb {
-        background-color: #ffffff39;
-        width: 0.1rem;
-        border-radius: 1rem;
-      }
-    }
-    .contact {
-      background-color: #ffffff39;
-      width: 90%;
-      min-height: 5rem;
-      cursor: pointer;
-      border-radius: 0.2rem;
-      padding: 0.4rem;
-      gap: 1rem;
+    color: white;
+    .search-input {
+      background: transparent;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      position: relative;
       display: flex;
+      justify-content: start;
       align-items: center;
-      transition: 0.5s ease-in-out;
-      .avatar {
-        img {
-          height: 3rem;
-        }
-      }
-      .username {
-        h3 {
+      border-radius: 10rem;
+      margin-left: 10%;
+      width: 70%;
+      height: 60px;
+      cursor: pointer;
+      input {
+        color: white;
+        border-radius: 10rem;
+        width: 100%;
+        height: 100%;
+        padding-left: 20%;
+        background-color: transparent;
+        border: none;
+        font-size: 1rem;
+        &::placeholder {
           color: white;
         }
+        &:focus {
+          outline: none;
+        }
+      }
+      svg {
+        font-size: 1.2rem;
+        position: absolute;
+        left: 7%;
       }
     }
-    .selected {
-      background-color: #9186f3;
+    .icons {
+      display: flex;
+      justify-items: center;
+      align-items: center;
+      margin-inline: auto;
+      gap: 2px;
+      svg {
+        padding: 0.2rem;
+        font-size: 2rem;
+        cursor: pointer;
+      }
     }
   }
-  .current-user {
-    background-color: #0d0d30;
+`
+
+const ContactsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 50px;
+  height: 100vh;
+  overflow: auto;
+  gap: 2.5rem;
+  &::-webkit-scrollbar {
+    width: 0.2rem;
+    &-thumb {
+      background-color: #ffffff39;
+      width: 0.1rem;
+      border-radius: 1rem;
+    }
+  }
+  .contact {
+    position: relative;
+    background: #282b30;
+    width: 80%;
+    height: 16%;
+    cursor: pointer;
+    padding: 2rem;
+    border-radius: 10px;
+    gap: 1rem;
     display: flex;
-    justify-content: center;
     align-items: center;
-    gap: 2rem;
+    transition: 0.5s ease-in-out;
     .avatar {
       img {
+        position: absolute;
+        top: -20px;
+        left: -20px;
         height: 4rem;
-        max-inline-size: 100%;
+        border: solid 2px #ffffff;
+        border-radius: 100%;
       }
     }
     .username {
-      h2 {
+      h3 {
         color: white;
       }
     }
-    @media screen and (min-width: 720px) and (max-width: 1080px) {
-      gap: 0.5rem;
-      .username {
-        h2 {
-          font-size: 1rem;
-        }
-      }
-    }
+  }
+  .selected {
+    background-color: #0a8ad7;
   }
 `

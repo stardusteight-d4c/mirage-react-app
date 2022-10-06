@@ -1,7 +1,9 @@
 import React from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import { Register, Login, Chat  } from './pages'
-import { ChooseAvatar } from './pages/ChooseAvatar'
+import Chat from './pages/Chat'
+import ChooseAvatar from './pages/ChooseAvatar'
+import Login from './pages/Login'
+import Register from './pages/Register'
 
 function App() {
   return (
