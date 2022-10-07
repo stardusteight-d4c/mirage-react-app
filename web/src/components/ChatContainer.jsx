@@ -27,7 +27,6 @@ const ChatContainer = ({ currentChat, currentUser, socket }) => {
     const msgs = [...messages]
     msgs.push({ fromSelf: true, message: msg })
     setMessages(msgs)
-    console.log(msgs)
   }
 
   useEffect(() => {

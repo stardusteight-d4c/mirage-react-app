@@ -1,19 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
-import { Buffer } from 'buffer'
 import styled from 'styled-components'
-import Loader from '../assets/loader.gif'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { chooseAvatarRoute } from '../utils/api-routes'
 
 const ChooseAvatar = () => {
-  const [avatars, setAvatars] = useState([])
-  const [isLoading, setIsLoading] = useState(true)
   const [selectedAvatar, setSelectedAvatar] = useState(undefined)
-
-  const api = 'https://api.multiavatar.com/45678945'
+  const [selectedFile, setSelectedFile] = useState(null)
   const navigate = useNavigate()
 
   const toastOptions = {
@@ -50,61 +45,60 @@ const ChooseAvatar = () => {
     }
   }
 
-  useEffect(() => {
-    async function fetchData() {
-      if (localStorage.getItem('mirage-app-user')) {
-        try {
-          const data = []
-          for (let i = 0; i < 4; i++) {
-            const image = await axios.get(
-              `${api}/${Math.round(Math.random() * 1000)}`
-            )
-            const buffer = new Buffer(image.data)
-            data.push(buffer.toString('base64'))
-          }
-          setAvatars(data)
-          setIsLoading(false)
-        } catch (error) {
-          toast.error(
-            'Ops! Ocorreu um erro na requisição, recarregue a página ou tente novamente mais tarde.',
-            toastOptions
-          )
-        }
-      }
+  const addImageToPost = (e) => {
+    const reader = new FileReader()
+    if (e.target.files[0]) {
+      reader.readAsDataURL(e.target.files[0])
     }
-    fetchData()
-  }, [])
+
+    reader.onload = (readerEvent) => {
+      setSelectedFile(readerEvent.target.result)
+    }
+  }
+
+  console.log('selectedFile', selectedFile)
+
+  const avatars = [
+    'https://i.ibb.co/DWQ4fky/avatar01.jpg',
+    'https://i.ibb.co/PTjd6pJ/avatar02.jpg',
+    'https://i.ibb.co/7v8G22h/avatar03.png',
+    'https://i.ibb.co/VB9RGjD/avatar04.jpg',
+  ]
+
+  // Trabalhar na lógica de selecionar uma imagem padrão ou via arquivo -> fazer responsividade 
+  // Socket.io realtime message
 
   return (
     <>
-      {isLoading ? (
-        <Wrapper>
-          <img src={Loader} alt="loading" width={150} />
-        </Wrapper>
-      ) : (
-        <Wrapper>
-          <div className="title-container">
-            <h1>Escolha um avatar como sua foto de perfil</h1>
-          </div>
-          <div className="avatars">
-            {avatars.map((avatar, index) => (
-              <div
-                className={`avatar ${selectedAvatar === index && 'selected'}`}
-                key={index}
-              >
-                <img
-                  src={`data:image/svg+xml;base64,${avatar}`}
-                  alt="avatar/img"
-                  onClick={() => setSelectedAvatar(index)}
-                />
-              </div>
-            ))}
-          </div>
-          <button className="submit-btn" onClick={handleProfilePicture}>
-            Escolher como foto de perfil
-          </button>
-        </Wrapper>
-      )}
+      <Wrapper>
+        <div className="title-container">
+          <h1>Escolha um avatar como sua foto de perfil</h1>
+        </div>
+        <div className="avatars">
+          {avatars?.map((avatar, index) => (
+            <div
+              className={`avatar ${selectedAvatar === index && 'selected'}`}
+              key={index}
+            >
+              <img
+                src={avatar}
+                alt="avatar/img"
+                onClick={() => setSelectedAvatar(index)}
+              />
+            </div>
+          ))}
+        </div>
+        <button className="submit-btn" onClick={handleProfilePicture}>
+          Escolher como foto de perfil
+        </button>
+        <input type="file" onChange={addImageToPost} />
+        <img
+          className="selectedFile"
+          src={selectedFile}
+          alt="avatar/img"
+          onClick={() => setSelectedAvatar(index)}
+        />
+      </Wrapper>
       <ToastContainer />
     </>
   )
@@ -116,12 +110,9 @@ const Wrapper = styled.div`
   justify-content: center;
   align-items: center;
   gap: 3rem;
-  background-color: #212121;
+  background-color: #17181a;
   width: 100vw;
   height: 100vh;
-  .loader {
-    max-inline-size: 100%;
-  }
   .title-container {
     h1 {
       color: white;
@@ -132,9 +123,9 @@ const Wrapper = styled.div`
     justify-content: center;
     gap: 2rem;
     .avatar {
-      border: 0.4rem solid transparent;
+      border: 2px solid transparent;
       padding: 0.4rem;
-      border-radius: 5rem;
+      border-radius: 100%;
       cursor: pointer;
       display: flex;
       justify-content: center;
@@ -142,14 +133,15 @@ const Wrapper = styled.div`
       transition: 0.5s ease-in-out;
       img {
         height: 6rem;
+        border-radius: 100%;
       }
     }
     .selected {
-      border: 0.4rem solid #4e0eff;
+      border: 2px solid #0a8ad7;
     }
   }
   .submit-btn {
-    background-color: #b13a6d;
+    background-color: #0a8ad7;
     color: white;
     padding: 1rem 2rem;
     border: none;
@@ -160,8 +152,12 @@ const Wrapper = styled.div`
     text-transform: uppercase;
     transition: 0.5s ease-in-out;
     &:hover {
-      background-color: #ff0570;
+      background-color: #04639e;
     }
+  }
+  .selectedFile {
+    height: 6rem;
+    border-radius: 100%;
   }
 `
 

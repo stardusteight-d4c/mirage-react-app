@@ -106,7 +106,7 @@ const FormWrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: #212121;
+  background-color: #17181a;
   .brand {
     display: flex;
     align-items: center;
@@ -154,7 +154,7 @@ const FormWrapper = styled.div`
       text-transform: uppercase;
       transition: 0.5s ease-in-out;
       &:hover {
-        background-color: #04639e
+        background-color: #04639e;
       }
     }
     div {

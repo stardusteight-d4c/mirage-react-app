@@ -2,10 +2,9 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import { BsSearch } from 'react-icons/bs'
 import { AiFillStar, AiOutlineCloudDownload } from 'react-icons/ai'
-import { lastMessageRoute } from '../utils/api-routes'
 import Contact from './Contact'
 
-export const Contacts = ({ contacts, currentUser, changeChat }) => {
+export const Contacts = ({ contacts, currentUser, changeChat, searchUser }) => {
   const [currentSelected, setCurrentSelected] = useState(undefined)
 
   const changeCurrentChat = (index, contact) => {
@@ -13,9 +12,7 @@ export const Contacts = ({ contacts, currentUser, changeChat }) => {
     changeChat(contact)
   }
 
-  // - Criar um componente para os contatos sendo mapeados
-  // - Criar rota que retorna o ultimo obejeto de all messages "getLastMessage"
-  // - Exibir a última mensagem e data criada no componente contato
+  // console.log(contacts)
 
   return (
     <>
@@ -25,7 +22,7 @@ export const Contacts = ({ contacts, currentUser, changeChat }) => {
             <div className="search-container">
               <div className="search-input">
                 <BsSearch />
-                <input type="text" placeholder="Buscar conversa..." />
+                <input type="text" placeholder="Buscar conversa..."  onChange={(e) => searchUser(e.target.value)}/>
               </div>
               <div className="icons">
                 <AiFillStar />
@@ -41,6 +38,7 @@ export const Contacts = ({ contacts, currentUser, changeChat }) => {
         <ContactsContainer>
           {contacts.map((contact, index) => (
             <Contact
+            key={index}
               currentUser={currentUser}
               contact={contact}
               index={index}
@@ -142,8 +140,8 @@ const ContactsContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 50px;
-  height: 100vh;
+  padding-block: 50px;
+  height: 80vh;
   overflow: auto;
   gap: 2.5rem;
   &::-webkit-scrollbar {

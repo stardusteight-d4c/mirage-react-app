@@ -21,6 +21,7 @@ const Chat = () => {
   const [currentUser, setCurrentUser] = useState(undefined)
   const [currentChat, setCurrentChat] = useState(undefined)
   const [showLogout, setShowLogout] = useState(false)
+  const [isSearching, setIsSearching] = useState(true)
   const navigate = useNavigate()
 
   const socket = useRef()
@@ -49,7 +50,7 @@ const Chat = () => {
       }
     }
     fetchDataContacts()
-  }, [currentUser])
+  }, [currentUser, isSearching])
 
   useEffect(() => {
     if (currentUser) {
@@ -62,6 +63,20 @@ const Chat = () => {
     setCurrentChat(chat)
   }
 
+  const searchUser = (searchTerm) => {
+    setIsSearching(true)
+    let pattern = new RegExp(searchTerm)
+    const result = contacts.filter((item) => item.username.match(pattern))
+    if (result.length != 0) {
+      setContacts(result)
+    }
+    if (searchTerm === '') {
+      setIsSearching(false)
+    }
+  }
+
+  console.log(currentUser);
+
   return (
     <>
       {currentUser && (
@@ -72,7 +87,7 @@ const Chat = () => {
                 <div className="avatar">
                   <img
                     onClick={() => setShowLogout(!showLogout)}
-                    src="https://avatarfiles.alphacoders.com/165/thumb-165945.jpg"
+                    src={currentUser.avatarImage}
                     alt="user/avatar"
                   />
                   <AnimatePresence>
@@ -103,6 +118,7 @@ const Chat = () => {
               contacts={contacts}
               currentUser={currentUser}
               changeChat={handleChangeChat}
+              searchUser={searchUser}
             />
             {currentChat === undefined ? (
               <Welcome currentUser={currentUser} />

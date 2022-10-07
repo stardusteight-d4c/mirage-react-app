@@ -128,7 +128,7 @@ const FormWrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: #212121;
+  background-color: #17181a;
   .brand {
     display: flex;
     align-items: center;

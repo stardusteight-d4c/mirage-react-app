@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { RiSendPlaneFill } from 'react-icons/ri'
-import { BsEmojiSmileFill } from 'react-icons/bs'
+import { AiFillSmile } from 'react-icons/ai'
 
 export const ChatInput = ({ handleSendMsg }) => {
   const [showEmojiPicker, setShowEmojiPicker] = useState(false)
@@ -29,7 +29,7 @@ export const ChatInput = ({ handleSendMsg }) => {
     <Wrapper>
       <div className="button-container">
         <div className="emoji">
-          <BsEmojiSmileFill onClick={handleEmojiPickerHideShow} />
+          <AiFillSmile onClick={handleEmojiPickerHideShow} />
           {/* {showEmojiPicker && <Picker />} */}
         </div>
       </div>
@@ -60,10 +60,10 @@ const Wrapper = styled.div`
     align-items: center;
     gap: 1rem;
     .emoji {
-      position: relative;
+      margin-top: 8px;
       svg {
-        font-size: 1.5rem;
-        color: #fff000c8;
+        font-size: 1.8rem;
+        color: white;
         cursor: pointer;
       }
     }
