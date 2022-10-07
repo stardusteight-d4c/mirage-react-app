@@ -113,6 +113,7 @@ const Wrapper = styled.div`
     align-items: center;
     padding: 0 2rem;
     background-color: #17181a;
+    border-bottom: solid 1px rgba(255, 255, 255, 0.18);
     .user-details {
       display: flex;
       align-items: center;
@@ -136,13 +137,13 @@ const Wrapper = styled.div`
     gap: 1rem;
     overflow: auto;
     &::-webkit-scrollbar {
-    width: 0.2rem;
-    &-thumb {
-      background-color: #ffffff39;
-      width: 0.1rem;
-      border-radius: 1rem;
+      width: 0.2rem;
+      &-thumb {
+        background-color: #ffffff39;
+        width: 0.1rem;
+        border-radius: 1rem;
+      }
     }
-  }
     .message {
       display: flex;
       align-items: center;
@@ -151,7 +152,7 @@ const Wrapper = styled.div`
         max-width: 50%;
         overflow-wrap: break-word;
         padding-inline: 1rem;
-        padding-block: .3rem;
+        padding-block: 0.3rem;
         font-size: 1.1rem;
         border-radius: 1rem;
         color: white;

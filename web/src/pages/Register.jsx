@@ -84,11 +84,11 @@ const Register = () => {
         <form onSubmit={(e) => handleSubmit(e)}>
           <div className="brand">
             <img src={Logo} alt="logo/torpedo" />
-            <h1>Mirage</h1>
+            <h1>MirageChat</h1>
           </div>
           <input
             type="text"
-            placeholder="Username"
+            placeholder="Nome de usuário"
             name="username"
             onChange={(e) => handleChange(e)}
           />
@@ -100,13 +100,13 @@ const Register = () => {
           />
           <input
             type="password"
-            placeholder="Password"
+            placeholder="Senha"
             name="password"
             onChange={(e) => handleChange(e)}
           />
           <input
             type="password"
-            placeholder="Confirm Password"
+            placeholder="Confirmar senha"
             name="confirmPassword"
             onChange={(e) => handleChange(e)}
           />
@@ -154,18 +154,18 @@ const FormWrapper = styled.div`
     input {
       background-color: transparent;
       padding: 0.8rem;
-      border: 0.1rem solid #b13a6d;
+      border: 0.1rem solid #0a8ad7;
       border-radius: 0.3rem;
       color: white;
       width: 100%;
       font-size: 1rem;
       &:focus {
-        border: 0.1rem solid #b13a6d;
+        border: 0.1rem solid #0a8ad7;
         outline: none;
       }
     }
     button {
-      background-color: #b13a6d;
+      background-color: #0a8ad7;
       color: white;
       padding: 1rem 2rem;
       border: none;
@@ -176,15 +176,17 @@ const FormWrapper = styled.div`
       text-transform: uppercase;
       transition: 0.5s ease-in-out;
       &:hover {
-        background-color: #ff0570;
+        background-color: #04639e;
       }
     }
     span {
       color: white;
       text-transform: uppercase;
+      display: flex;
+      justify-content: space-between;
       a {
         text-decoration: none;
-        color: #b13a6d;
+        color: #0a8ad7;
         text-transform: none;
         font-weight: bold;
       }

@@ -11,6 +11,7 @@ import { HiHome, HiBell } from 'react-icons/hi'
 import { IoGameController } from 'react-icons/io5'
 import { BsFillChatDotsFill, BsMusicNote } from 'react-icons/bs'
 import { FiMoreHorizontal } from 'react-icons/fi'
+import { motion, AnimatePresence } from 'framer-motion'
 
 import { io } from 'socket.io-client'
 import { Logout } from '../components/Logout'
@@ -74,11 +75,19 @@ const Chat = () => {
                     src="https://avatarfiles.alphacoders.com/165/thumb-165945.jpg"
                     alt="user/avatar"
                   />
-                  {showLogout && (
-                    <div className="logout">
-                      <Logout />
-                    </div>
-                  )}
+                  <AnimatePresence>
+                    {showLogout && (
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        transition={{ duration: 0.5 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="logout"
+                      >
+                        <Logout />
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
                 <div className="menu-icons">
                   <HiHome className="active" />

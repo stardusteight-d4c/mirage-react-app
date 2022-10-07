@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import { BsSearch } from 'react-icons/bs'
 import { AiFillStar, AiOutlineCloudDownload } from 'react-icons/ai'
+import { lastMessageRoute } from '../utils/api-routes'
+import Contact from './Contact'
 
 export const Contacts = ({ contacts, currentUser, changeChat }) => {
   const [currentSelected, setCurrentSelected] = useState(undefined)
@@ -10,6 +12,10 @@ export const Contacts = ({ contacts, currentUser, changeChat }) => {
     setCurrentSelected(index)
     changeChat(contact)
   }
+
+  // - Criar um componente para os contatos sendo mapeados
+  // - Criar rota que retorna o ultimo obejeto de all messages "getLastMessage"
+  // - Exibir a última mensagem e data criada no componente contato
 
   return (
     <>
@@ -27,29 +33,20 @@ export const Contacts = ({ contacts, currentUser, changeChat }) => {
               </div>
             </div>
             <div className="options">
-              <span>Mensagens</span>
+              <span className="active">Mensagens</span>
               <span>Grupos</span>
             </div>
           </div>
         </Header>
         <ContactsContainer>
           {contacts.map((contact, index) => (
-            <div
-              onClick={() => changeCurrentChat(index, contact)}
-              className={`contact ${index === currentSelected && 'selected'}`}
-              key={index}
-            >
-              <div className="avatar">
-                <img
-                  src="https://avatarfiles.alphacoders.com/161/thumb-161326.png"
-                  // src={`data:image/svg+xml;base64,${contact.avatarImage}`}
-                  alt="user/avatar"
-                />
-              </div>
-              <div className="username">
-                <h3>{contact.username}</h3>
-              </div>
-            </div>
+            <Contact
+              currentUser={currentUser}
+              contact={contact}
+              index={index}
+              changeCurrentChat={changeCurrentChat}
+              currentSelected={currentSelected}
+            />
           ))}
         </ContactsContainer>
       </Wrapper>
@@ -60,6 +57,7 @@ export const Contacts = ({ contacts, currentUser, changeChat }) => {
 const Wrapper = styled.section`
   overflow: hidden;
   background: #17181a;
+  border-right: solid 1px rgba(255, 255, 255, 0.18);
 `
 
 const Header = styled.header`
@@ -71,10 +69,16 @@ const Header = styled.header`
     flex-direction: row;
     gap: 35px;
     margin-left: 15px;
+    .active {
+      border-bottom: solid 2px #0a8ad7;
+    }
     span {
+      transition: ease-in-out;
+      transition-duration: 200ms;
+      cursor: pointer;
       border-bottom: solid 2px transparent;
       &:hover {
-        border-bottom: solid 2px blue;
+        border-bottom: solid 2px #0a8ad7;
       }
     }
   }
@@ -149,36 +153,5 @@ const ContactsContainer = styled.div`
       width: 0.1rem;
       border-radius: 1rem;
     }
-  }
-  .contact {
-    position: relative;
-    background: #282b30;
-    width: 80%;
-    height: 16%;
-    cursor: pointer;
-    padding: 2rem;
-    border-radius: 10px;
-    gap: 1rem;
-    display: flex;
-    align-items: center;
-    transition: 0.5s ease-in-out;
-    .avatar {
-      img {
-        position: absolute;
-        top: -20px;
-        left: -20px;
-        height: 4rem;
-        border: solid 2px #ffffff;
-        border-radius: 100%;
-      }
-    }
-    .username {
-      h3 {
-        color: white;
-      }
-    }
-  }
-  .selected {
-    background-color: #0a8ad7;
   }
 `

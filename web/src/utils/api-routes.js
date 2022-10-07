@@ -5,3 +5,4 @@ export const chooseAvatarRoute = `${hostServer}/api/auth/chooseAvatar`
 export const allUsersRoute = `${hostServer}/api/auth/allUsers`
 export const sendMessageRoute = `${hostServer}/api/messages/addMessage`
 export const allMessagesRoute = `${hostServer}/api/messages/allMessages`
+export const lastMessageRoute = `${hostServer}/api/messages/lastMessage`

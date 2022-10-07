@@ -5,13 +5,12 @@ export const register = async (req, res, next) => {
   try {
     const { username, email, password } = req.body
     const usernameCheck = await userModel.findOne({ username })
-    console.log('usernameCheck', usernameCheck)
     const emailCheck = await userModel.findOne({ email })
     if (usernameCheck) {
-      return res.json({ msg: 'username already used', status: false })
+      return res.json({ msg: 'O nome de usuário já está em uso', status: false })
     }
     if (emailCheck) {
-      return res.json({ msg: 'Email already used', status: false })
+      return res.json({ msg: 'O Email já está em uso', status: false })
     }
     const hashedPassword = await brcypt.hash(password, 10)
     const user = await userModel.create({
@@ -31,11 +30,11 @@ export const login = async (req, res, next) => {
     const { username, password } = req.body
     const user = await userModel.findOne({ username })
     if (!user) {
-      return res.json({ msg: 'Incorrect username or password', status: false })
+      return res.json({ msg: 'Senha ou nome de usuário incorretos', status: false })
     }
     const isPasswordValid = await brcypt.compare(password, user.password)
     if (!isPasswordValid) {
-      return res.json({ msg: 'Incorrect username or password', status: false })
+      return res.json({ msg: 'Senha ou nome de usuário incorretos', status: false })
     }
     delete user.password
     return res.json({ status: true, user })
@@ -48,7 +47,6 @@ export const chooseAvatar = async (req, res, next) => {
   try {
     const userId = req.params.id
     const avatarImage = req.body.image
-    console.log(userId)
     const userData = await userModel.findByIdAndUpdate(userId, {
       isAvatarImageSet: true,
       avatarImage,

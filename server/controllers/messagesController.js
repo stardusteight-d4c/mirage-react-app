@@ -38,3 +38,19 @@ export const getAllMessage = async (req, res, next) => {
     next(error)
   }
 }
+
+export const getLastMessage = async (req, res, next) => {
+  try {
+    const { from, to } = req.query
+    const messagesOfSender = await messageModel.find({
+      users: {
+        $all: [from, to],
+      },
+      sender: to,
+    })
+    const lastMessagReceived = messagesOfSender.slice(-1)
+    return res.json(lastMessagReceived)
+  } catch (error) {
+    next(error)
+  }
+}

@@ -5,9 +5,9 @@ export const Welcome = ({ currentUser }) => {
   return (
     <Wrapper>
       <h1>
-        Welcome, <span>{currentUser?.username}</span>
+       Bem-vindo, <span>{currentUser?.username}</span>!
       </h1>
-      <h3>Select a chat to Start Messaging</h3>
+      <h3>Selecione um chat para começar a conversar.</h3>
     </Wrapper>
   )
 }
@@ -19,6 +19,6 @@ const Wrapper = styled.div`
   align-items: center;
   color: white;
   span {
-    color: pink;
+    color: #0a8ad7;
   }
 `
