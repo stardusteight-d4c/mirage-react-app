@@ -1,12 +1,10 @@
 import React from 'react'
 import styled from 'styled-components'
 import { useRecoilValue } from 'recoil'
-import { displayMobileState } from '../../atoms/chatAppAtom'
+import { displayMobileSelector } from '../../atoms/chatAppAtom'
 
 export const Welcome = ({ currentUser }) => {
-  const displayMobile = useRecoilValue(
-    displayMobileState
-  )
+  const displayMobile = useRecoilValue(displayMobileSelector)
 
   return (
     <Wrapper display={displayMobile}>

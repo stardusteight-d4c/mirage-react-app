@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { io } from 'socket.io-client'
 import axios from 'axios'
@@ -17,7 +17,6 @@ import {
   currentUserState,
   searchingState,
 } from '../../atoms/chatAppAtom'
-
 const Chat = () => {
   const [contacts, setContacts] = useRecoilState(contactsState)
   const [currentUser, setCurrentUser] = useRecoilState(currentUserState)

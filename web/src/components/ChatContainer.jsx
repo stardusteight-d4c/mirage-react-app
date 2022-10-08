@@ -5,14 +5,12 @@ import axios from 'axios'
 import { allMessagesRoute, sendMessageRoute } from '../utils/api-routes'
 import { v4 as uuiv4 } from 'uuid'
 import { useRecoilValue } from 'recoil'
-import { displayMobileState } from '../../atoms/chatAppAtom'
+import { displayMobileSelector } from '../../atoms/chatAppAtom'
 
 const ChatContainer = ({ currentChat, currentUser, socket }) => {
   const [messages, setMessages] = useState([])
   const [arrivalMessage, setArrivalMessage] = useState(null)
-  const displayMobile = useRecoilValue(
-    displayMobileState
-  )
+  const displayMobile = useRecoilValue(displayMobileSelector)
   const scrollRef = useRef()
 
   const handleSendMsg = async (msg) => {
@@ -32,17 +30,27 @@ const ChatContainer = ({ currentChat, currentUser, socket }) => {
     setMessages(msgs)
   }
 
+  // console.log('socket.current', socket.current)
+
   useEffect(() => {
     if (socket.current) {
-      socket.current.on('msg-recieve', (msg) => {
+      socket.current.on('msg-received', (msg) => {
+        console.log(msg);
         setArrivalMessage({ fromSelf: false, message: msg })
       })
     }
   }, [])
 
+  // O problema é que arrivalMessage está sendo retornado, porém o campo message: msg está vindo como null
+  // O UseEffect abaixo está funcionando corretamente, mas não renderiza a mensagem pois não há,
+  // Ou seja, tudo está funcionando como deveria, menos a tal mensagem está sendo adquirida
+
   useEffect(() => {
     arrivalMessage && setMessages((prev) => [...prev, arrivalMessage])
   }, [arrivalMessage])
+
+  console.log('arrivalMessage', arrivalMessage)
+  console.log('messages', messages)
 
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behaviour: 'smooth' })
@@ -105,9 +113,7 @@ const Wrapper = styled.div`
   overflow: hidden;
   @media screen and (min-width: 0px) and (max-width: 800px) {
     display: ${(props) => props.display};
-  }
-  @media screen and (min-width: 720px) and (max-width: 1080px) {
-    grid-template-rows: 15% 70% 15%;
+    width: 100%;
   }
   .chat-header {
     display: flex;

@@ -40,7 +40,7 @@ export const ChatInput = ({ handleSendMsg }) => {
           onChange={(e) => setMsg(e.target.value)}
           value={msg}
         />
-        <button className="submit">
+        <button>
           <RiSendPlaneFill />
         </button>
       </Input>
@@ -55,16 +55,29 @@ const Wrapper = styled.div`
   background-color: #17181a;
   padding: 0 2rem;
   padding-bottom: 0.3rem;
+  @media screen and (min-width: 0px) and (max-width: 800px) {
+    display: flex;
+    padding: 0.2rem;
+  }
   .button-container {
     display: flex;
     align-items: center;
     gap: 1rem;
+    @media screen and (min-width: 0px) and (max-width: 800px) {
+      position: relative;
+      width: 10%;
+    }
     .emoji {
       margin-top: 8px;
       svg {
         font-size: 1.8rem;
         color: white;
         cursor: pointer;
+        @media screen and (min-width: 0px) and (max-width: 800px) {
+          position: absolute;
+          left: 0;
+          bottom: -8px;
+        }
       }
     }
   }
@@ -75,6 +88,10 @@ const Input = styled.form`
   display: flex;
   align-items: center;
   gap: 2rem;
+  position: relative;
+  @media screen and (min-width: 0px) and (max-width: 800px) {
+    width: 90%;
+  }
   input {
     background-color: #282b30;
     border-radius: 2rem;
@@ -100,6 +117,10 @@ const Input = styled.form`
     background-color: #0a8ad7;
     border: none;
     cursor: pointer;
+    @media screen and (min-width: 0px) and (max-width: 800px) {
+      position: absolute;
+      right: 0;
+    }
     svg {
       font-size: 1.5rem;
       color: white;

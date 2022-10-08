@@ -119,9 +119,15 @@ const Wrapper = styled.aside`
     gap: 1.5rem;
     border-radius: 0.5rem;
     color: white;
+    @media screen and (min-width: 1500px) {
+      gap: 2.5rem;
+    }
     svg {
       cursor: pointer;
       padding: 0.5rem;
+      @media screen and (min-width: 1500px) {
+        gap: 4rem;
+      }
       font-size: 3rem;
       transition: ease-in-out;
       transition-duration: 400ms;

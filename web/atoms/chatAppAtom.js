@@ -25,8 +25,8 @@ export const menuItemActiveState = atom({
   default: 'HOME',
 })
 
-export const displayMobileState = selector({
-  key: 'displayMobileState',
+export const displayMobileSelector = selector({
+  key: 'displayMobileSelector',
   get: ({get}) => {
     const itemActive = get(menuItemActiveState)
     const displayMobile = itemActive === 'CHAT' ? 'none' : 'grid'
