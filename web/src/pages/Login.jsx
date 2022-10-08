@@ -154,7 +154,7 @@ const FormWrapper = styled.div`
       text-transform: uppercase;
       transition: 0.5s ease-in-out;
       &:hover {
-        background-color: #04639e;
+        background-color: #2aacfd;
       }
     }
     div {

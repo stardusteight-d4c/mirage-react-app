@@ -3,26 +3,47 @@ import styled from 'styled-components'
 import { BsSearch } from 'react-icons/bs'
 import { AiFillStar, AiOutlineCloudDownload } from 'react-icons/ai'
 import Contact from './Contact'
+import { useRecoilState } from 'recoil'
+import { contactsState, currentUserState, menuItemActiveState, searchingState } from '../../atoms/chatAppAtom'
 
-export const Contacts = ({ contacts, currentUser, changeChat, searchUser }) => {
+export const Contacts = ({ handleChangeChat }) => {
+  const [contacts, setContacts] = useRecoilState(contactsState)
+  const [currentUser, setCurrentUser] = useRecoilState(currentUserState)
+  const [searching, setSearching] = useRecoilState(searchingState)
+  const [menuItemActive, setMenuItemActiveState] = useRecoilState(menuItemActiveState)
   const [currentSelected, setCurrentSelected] = useState(undefined)
 
   const changeCurrentChat = (index, contact) => {
     setCurrentSelected(index)
-    changeChat(contact)
+    handleChangeChat(contact)
+    setMenuItemActiveState('HOME')
   }
 
-  // console.log(contacts)
+  const searchUser = (searchTerm) => {
+    setSearching(true)
+    let pattern = new RegExp(searchTerm)
+    const result = contacts.filter((item) => item.username.match(pattern))
+    if (result.length != 0) {
+      setContacts(result)
+    }
+    if (searchTerm === '') {
+      setSearching(false)
+    }
+  }
 
   return (
     <>
-      <Wrapper>
+      <Wrapper display={menuItemActive === 'CHAT' ? 'block' : 'none'}>
         <Header>
           <div>
             <div className="search-container">
               <div className="search-input">
                 <BsSearch />
-                <input type="text" placeholder="Buscar conversa..."  onChange={(e) => searchUser(e.target.value)}/>
+                <input
+                  type="text"
+                  placeholder="Buscar conversa..."
+                  onChange={(e) => searchUser(e.target.value)}
+                />
               </div>
               <div className="icons">
                 <AiFillStar />
@@ -38,7 +59,7 @@ export const Contacts = ({ contacts, currentUser, changeChat, searchUser }) => {
         <ContactsContainer>
           {contacts.map((contact, index) => (
             <Contact
-            key={index}
+              key={index}
               currentUser={currentUser}
               contact={contact}
               index={index}
@@ -56,6 +77,11 @@ const Wrapper = styled.section`
   overflow: hidden;
   background: #17181a;
   border-right: solid 1px rgba(255, 255, 255, 0.18);
+  @media screen and (min-width: 0px) and (max-width: 800px) {
+    display: ${(props) => props.display};
+    width: 90%;
+   
+  }
 `
 
 const Header = styled.header`

@@ -1,15 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import { ChatInput } from './ChatInput'
-import { Logout } from './Logout'
-import { Messages } from './Messages'
 import axios from 'axios'
 import { allMessagesRoute, sendMessageRoute } from '../utils/api-routes'
 import { v4 as uuiv4 } from 'uuid'
+import { useRecoilValue } from 'recoil'
+import { displayMobileState } from '../../atoms/chatAppAtom'
 
 const ChatContainer = ({ currentChat, currentUser, socket }) => {
   const [messages, setMessages] = useState([])
   const [arrivalMessage, setArrivalMessage] = useState(null)
+  const displayMobile = useRecoilValue(
+    displayMobileState
+  )
   const scrollRef = useRef()
 
   const handleSendMsg = async (msg) => {
@@ -61,14 +64,11 @@ const ChatContainer = ({ currentChat, currentUser, socket }) => {
   return (
     <>
       {currentChat && (
-        <Wrapper>
+        <Wrapper display={displayMobile}>
           <div className="chat-header">
             <div className="user-details">
               <div className="avatar">
-                <img
-                  src={`data:image/svg+xml;base64,${currentChat.avatarImage}`}
-                  alt="user/avatar"
-                />
+                <img src={currentChat.avatarImage} alt="user/avatar" />
               </div>
               <div className="username">
                 <h3>{currentChat.username}</h3>
@@ -103,6 +103,9 @@ const Wrapper = styled.div`
   gap: 0.1rem;
   background-color: #17181a;
   overflow: hidden;
+  @media screen and (min-width: 0px) and (max-width: 800px) {
+    display: ${(props) => props.display};
+  }
   @media screen and (min-width: 720px) and (max-width: 1080px) {
     grid-template-rows: 15% 70% 15%;
   }
@@ -119,7 +122,11 @@ const Wrapper = styled.div`
       gap: 1rem;
       .avatar {
         img {
-          height: 3rem;
+          width: 4rem;
+          height: 4rem;
+          border-radius: 100%;
+          object-fit: cover;
+          cursor: pointer;
         }
       }
       .username {

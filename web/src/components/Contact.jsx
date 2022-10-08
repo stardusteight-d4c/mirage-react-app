@@ -56,7 +56,7 @@ const Contact = ({
       </div>
       <div className="user-info">
         <h3>{contact.username}</h3>
-        {lastMessageReceived?.receivedFrom === contact._id  && (
+        {lastMessageReceived?.receivedFrom === contact._id && (
           <div className="message-info">
             <span className="message">{lastMessageReceived.message}</span>
             <span className="createdAt">
@@ -91,9 +91,11 @@ const Container = styled(motion.div)`
   .avatar {
     img {
       position: absolute;
+      width: 4rem;
+      height: 4rem;
+      object-fit: cover;
       top: -20px;
       left: -20px;
-      height: 4rem;
       border: solid 2px #ffffff;
       border-radius: 100%;
     }

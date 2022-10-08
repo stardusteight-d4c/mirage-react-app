@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import styled from 'styled-components'
@@ -10,6 +10,7 @@ const ChooseAvatar = () => {
   const [selectedAvatar, setSelectedAvatar] = useState(undefined)
   const [selectedFile, setSelectedFile] = useState(null)
   const navigate = useNavigate()
+  const filePickerRef = useRef(null)
 
   const toastOptions = {
     position: 'bottom-right',
@@ -31,7 +32,7 @@ const ChooseAvatar = () => {
     } else {
       const user = await JSON.parse(localStorage.getItem('mirage-app-user'))
       const { data } = await axios.post(`${chooseAvatarRoute}/${user._id}`, {
-        image: avatars[selectedAvatar],
+        image: !selectedFile ? avatars[selectedAvatar] : selectedFile,
       })
 
       if (data.isSet) {
@@ -57,6 +58,7 @@ const ChooseAvatar = () => {
   }
 
   console.log('selectedFile', selectedFile)
+  console.log('selectedAvatar', selectedAvatar)
 
   const avatars = [
     'https://i.ibb.co/DWQ4fky/avatar01.jpg',
@@ -64,9 +66,6 @@ const ChooseAvatar = () => {
     'https://i.ibb.co/7v8G22h/avatar03.png',
     'https://i.ibb.co/VB9RGjD/avatar04.jpg',
   ]
-
-  // Trabalhar na lógica de selecionar uma imagem padrão ou via arquivo -> fazer responsividade 
-  // Socket.io realtime message
 
   return (
     <>
@@ -88,16 +87,29 @@ const ChooseAvatar = () => {
             </div>
           ))}
         </div>
+        <input
+          hidden
+          ref={filePickerRef}
+          type="file"
+          onChange={addImageToPost}
+        />
+        <div
+          className="inputFile"
+          onClick={() => filePickerRef.current.click()}
+        >
+          Envie uma foto
+        </div>
+        
+        {selectedFile &&
+          <img
+            className="selectedFile"
+            src={selectedFile}
+            onClick={() => setSelectedAvatar(selectedFile)}
+          />
+        }
         <button className="submit-btn" onClick={handleProfilePicture}>
           Escolher como foto de perfil
         </button>
-        <input type="file" onChange={addImageToPost} />
-        <img
-          className="selectedFile"
-          src={selectedFile}
-          alt="avatar/img"
-          onClick={() => setSelectedAvatar(index)}
-        />
       </Wrapper>
       <ToastContainer />
     </>
@@ -133,6 +145,8 @@ const Wrapper = styled.div`
       transition: 0.5s ease-in-out;
       img {
         height: 6rem;
+        width: 6rem;
+        object-fit: cover;
         border-radius: 100%;
       }
     }
@@ -152,12 +166,27 @@ const Wrapper = styled.div`
     text-transform: uppercase;
     transition: 0.5s ease-in-out;
     &:hover {
-      background-color: #04639e;
+      background-color: #2aacfd;
+    }
+  }
+  .inputFile {
+    background-color: #0a8ad7;
+    padding-block: 1rem;
+    padding-inline: 0.5rem;
+    color: white;
+    cursor: pointer;
+    transition: 0.5s ease-in-out;
+    border-radius: 0.5rem;
+    &:hover {
+      background-color: #2aacfd;
     }
   }
   .selectedFile {
     height: 6rem;
+    width: 6rem;
+    object-fit: cover;
     border-radius: 100%;
+    cursor: pointer;
   }
 `
 
