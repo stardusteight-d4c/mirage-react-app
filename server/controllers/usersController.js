@@ -1,4 +1,4 @@
-import userModel from '../model/userModel.mjs'
+import userModel from '../model/userModel.js'
 import brcypt from 'bcrypt'
 
 export const register = async (req, res, next) => {
@@ -7,7 +7,10 @@ export const register = async (req, res, next) => {
     const usernameCheck = await userModel.findOne({ username })
     const emailCheck = await userModel.findOne({ email })
     if (usernameCheck) {
-      return res.json({ msg: 'O nome de usuário já está em uso', status: false })
+      return res.json({
+        msg: 'O nome de usuário já está em uso',
+        status: false,
+      })
     }
     if (emailCheck) {
       return res.json({ msg: 'O Email já está em uso', status: false })
@@ -30,11 +33,17 @@ export const login = async (req, res, next) => {
     const { username, password } = req.body
     const user = await userModel.findOne({ username })
     if (!user) {
-      return res.json({ msg: 'Senha ou nome de usuário incorretos', status: false })
+      return res.json({
+        msg: 'Senha ou nome de usuário incorretos',
+        status: false,
+      })
     }
     const isPasswordValid = await brcypt.compare(password, user.password)
     if (!isPasswordValid) {
-      return res.json({ msg: 'Senha ou nome de usuário incorretos', status: false })
+      return res.json({
+        msg: 'Senha ou nome de usuário incorretos',
+        status: false,
+      })
     }
     delete user.password
     return res.json({ status: true, user })
