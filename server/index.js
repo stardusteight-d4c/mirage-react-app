@@ -27,7 +27,7 @@ mongoose
     console.log(err.message)
   })
 
-const server = app.listen(process.env.PORT || 5000, () => {
+const server = app.listen(process.env.PORT, () => {
   console.log(`Server listeing on PORT: ${process.env.PORT}`)
 })
 

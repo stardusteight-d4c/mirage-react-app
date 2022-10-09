@@ -1,4 +1,4 @@
-import userModel from '../model/userModel.js'
+import userModel from '../model/userModel'
 import brcypt from 'bcrypt'
 
 export const register = async (req, res, next) => {
