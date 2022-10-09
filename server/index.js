@@ -33,9 +33,10 @@ const server = app.listen(process.env.PORT, () => {
 
 const io = new Server(server, {
   cors: {
-    origin: "*",
+    origin: process.env.ORIGIN,
     methods: ['GET', 'POST'],
     transports: ['websocket', 'polling'],
+    credentials: true,
   },
 })
 
