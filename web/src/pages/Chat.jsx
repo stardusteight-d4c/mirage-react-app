@@ -57,7 +57,16 @@ const Chat = () => {
 
   useEffect(() => {
     if (currentUser) {
-      socket.current = io(hostServer, { withCredentials: true })
+      socket.current = io(hostServer, {
+        withCredentials: true,
+        reconnectionDelay: 1000,
+        reconnection: true,
+        reconnectionAttempts: 10,
+        transports: ['websocket', 'polling'],
+        agent: false,
+        upgrade: false,
+        rejectUnauthorized: false,
+      })
       socket.current.emit('add-user', currentUser._id)
     }
   }, [currentUser])

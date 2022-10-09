@@ -9,7 +9,14 @@ import { Server } from 'socket.io'
 const app = express()
 dotenv.config()
 
-app.use(cors())
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', process.env.ORIGIN)
+  res.header('Access-Control-Allow-Headers', 'X-Requested-With')
+  res.header('Access-Control-Allow-Headers', 'Content-Type')
+  res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS')
+  app.use(cors())
+  next()
+})
 app.use(express.json())
 
 app.use('/api/auth', userRoutes)
@@ -33,7 +40,7 @@ const server = app.listen(process.env.PORT, () => {
 
 const io = new Server(server, {
   cors: {
-    origin: 'https://mirage-react-app-web.vercel.app',
+    origin: process.env.ORIGIN,
     methods: ['GET', 'POST'],
     transports: ['websocket', 'polling'],
     credentials: true,
