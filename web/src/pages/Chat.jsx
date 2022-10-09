@@ -17,6 +17,7 @@ import {
   currentUserState,
   searchingState,
 } from '../../atoms/chatAppAtom'
+
 const Chat = () => {
   const [contacts, setContacts] = useRecoilState(contactsState)
   const [currentUser, setCurrentUser] = useRecoilState(currentUserState)
