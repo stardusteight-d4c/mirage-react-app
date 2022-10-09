@@ -129,6 +129,7 @@ const FormWrapper = styled.div`
   justify-content: center;
   align-items: center;
   background-color: #17181a;
+  overflow: hidden;
   .brand {
     display: flex;
     align-items: center;
@@ -147,6 +148,9 @@ const FormWrapper = styled.div`
     flex-direction: column;
     gap: 1.5rem;
     background-color: #343434;
+    @media screen and (min-width: 0px) and (max-width: 800px) {
+      background-color: #17181a;
+    }
     border-radius: 1.5rem;
     padding: 3rem 4rem;
     box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px,
