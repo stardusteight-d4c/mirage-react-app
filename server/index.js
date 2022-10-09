@@ -2,8 +2,8 @@ import express from 'express'
 import cors from 'cors'
 import mongoose from 'mongoose'
 import dotenv from 'dotenv'
-import { router as userRoutes } from './routes/userRoutes.mjs'
-import { router as messagesRoutes } from './routes/messagesRoutes.mjs'
+import { router as userRoutes } from './routes/userRoutes.js'
+import { router as messagesRoutes } from './routes/messagesRoutes.js'
 import { Server } from 'socket.io'
 
 const app = express()
@@ -27,7 +27,7 @@ mongoose
     console.log(err.message)
   })
 
-const server = app.listen(process.env.PORT, () => {
+const server = app.listen(process.env.PORT || 5000, () => {
   console.log(`Server listeing on PORT: ${process.env.PORT}`)
 })
 
