@@ -57,12 +57,10 @@ const Chat = () => {
 
   useEffect(() => {
     if (currentUser) {
-      socket.current = io(hostServer, { transports: ['websocket'] })
+      socket.current = io(hostServer, { withCredentials: true })
       socket.current.emit('add-user', currentUser._id)
     }
   }, [currentUser])
-
-  console.log(hostServer)
 
   const handleChangeChat = (chat) => {
     setCurrentChat(chat)

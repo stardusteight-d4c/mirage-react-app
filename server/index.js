@@ -38,7 +38,6 @@ const io = new Server(server, {
     transports: ['websocket', 'polling'],
     credentials: true,
   },
-  allowEIO3: true,
 })
 
 global.onlineUsers = new Map()
