@@ -1,4 +1,4 @@
-# Mirage Chat | Realtime Chat with Web Sockets, Node.js & MongoDB
+# Mirage Chat | Realtime Chat with Web Sockets
 
 ![banner](banner.png)
 
