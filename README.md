@@ -10,10 +10,9 @@
 
 :arrow_right: Express | Creating an Application Programming Interface (API) with ES6 Modules <br />
 :arrow_right: Mongoose and MongoDB - Configure the Database <br />
-:arrow_right: API Routes <br />
+:arrow_right: Web Sockets - Socket.io <br />
 :arrow_right: Localstorage and Sessions <br />
 :arrow_right: Styled Components Props <br />
-:arrow_right: Web Sockets - Socket.io <br />
 :arrow_right: Docker and Containers <br />
 :arrow_right: Cloud Computing - Amazon Lighsail <br />
 
