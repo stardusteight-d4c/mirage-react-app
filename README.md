@@ -55,7 +55,7 @@ server
 
 ### Starting the application
 
-First we must create the `folder` that will contain the `server code`, create a `package.json` file to manage the application and its dependencies and install the `express` dependency. `nodemon` to automatically restart the server when file changes are detected in the directory. `cors` package to provide a `Connect/Express middleware` that can be used to enable `CORS` with various options. E `dotenv` para carregar `variáveis ​​de ambiente` de um arquivo `.env` para `process.env`. 
+First we must create the `folder` that will contain the `server code`, create a `package.json` file to manage the application and its dependencies and install the `express` dependency. `nodemon` to automatically restart the server when file changes are detected in the directory. `cors` package to provide a `Connect/Express middleware` that can be used to enable `CORS` with various options. And `dotenv` to load `environment variables` from a `.env` file to `process.env`.
 
 * CORS (Cross-origin Resource Sharing) is a mechanism used by browsers to `share resources between different origins`.
 
