@@ -9,7 +9,7 @@
 > client-side, all with visual feedback using `react-toastify`.
 
 :arrow_right: Express | Creating an Application Programming Interface (API) with ES6 Modules <br />
-:arrow_right: Mongoose and MongoDB - Configure the database <br />
+:arrow_right: Mongoose and MongoDB - Configure the Database <br />
 :arrow_right: API Routes <br />
 :arrow_right: Localstorage and Sessions <br />
 :arrow_right: Styled Components Props <br />
@@ -257,4 +257,4 @@ export default mongoose.model("Users", userSchema)
 *<i>expressjs.com/pt-br/starter/basic-routing</i> <br />
 <br />
 
-## Mongoose and MongoDB - Configure the database
+## Mongoose and MongoDB - Configure the Database
