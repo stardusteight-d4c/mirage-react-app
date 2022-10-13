@@ -257,3 +257,345 @@ export default mongoose.model("Users", userSchema)
 <br />
 
 ## Mongoose and MongoDB - Configure the Database
+
+Mongoose is a JavaScript object-oriented programming library that `creates a connection between MongoDB` and the `Node.js JavaScript runtime environment`.
+
+MongoDB is a schema-free `NoSQL document database`. This means that it stores JSON documents and that their structure can vary, as there is no rigid structure like SQL databases. This is one of the advantages of using NoSQL, as it `speeds up application development` and `reduces the complexity of implementations`.
+
+To create the database you can create a `MongoDB Atlas` account which provides customers with a fully managed service on Google's trusted and globally scalable infrastructure. With Atlas, you manage a `cloud database` simply and quickly, with just a few clicks in the UI. After creating the database, a `Connection String URI` will be available that can be used to `establish the connection with your database`, it is not necessary to define the initial schemas, are automatically created in the database as per MongoDB functions.
+
+###### Connection String URI Format
+
+ - `MONGO_URL='mongodb+srv://<username>:<password>@<cluster>.aana2aw.mongodb.net/?retryWrites=true&w=majority`
+
+In addition to `MongoDB Altas` on the web, you can download `MongoDB Compass` to access and manage the database from your own desktop with a graphical interface, just have access to the `Connection String URI`.
+
+```js
+// index.js
+
+import mongoose from 'mongoose'
+
+// ...
+mongoose
+  .connect(process.env.MONGO_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    console.log('DB Successfully Connection')
+  })
+  .catch((err) => {
+    console.log(err.message)
+  })
+```
+
+### Defining your schema
+
+Everything in Mongoose starts with a `Schema`. Each schema maps to a MongoDB collection and defines the `shape of the documents` within that collection.
+
+```js
+// models/userModel.js
+
+import mongoose from 'mongoose'
+
+const userSchema = new mongoose.Schema({
+  username: {
+    type: String,
+    require: true,
+    min: 3,
+    max: 20,
+    unique: true,
+  },
+  email: {
+    type: String,
+    require: true,
+    unique: true,
+    max: 50,
+  },
+  password: {
+    type: String,
+    require: true,
+    min: 8,
+  },
+  isAvatarImageSet: {
+    type: Boolean,
+    default: false,
+  },
+  avatarImage: {
+    type: String,
+    default: '',
+  },
+})
+
+export default mongoose.model("Users", userSchema) 
+```
+
+To use our schema definition, we need to convert our `userSchema` into a `Model` we can work with. To do so, we pass it into `mongoose.model(modelName, schema)`:
+
+ - `const User = mongoose.model('User', userSchema)`
+ 
+In this case I exported as `default` so just import the file and use `userModel`
+
+### Handling data and returning responses
+
+Query constructor used for `building queries`. You do not need to instantiate a Query directly. Instead use `Model` functions like `Model.find()`.
+
+```js
+// controllers/usersControllers.js
+
+export const login = async (req, res, next) => {
+  try {
+    // get the request body and destructure username and password
+    const { username, password } = req.body
+    // looks for the username value from the request in the username key ({username: username})
+    const user = await userModel.findOne({ username })
+    // if yes, return the user's document, if not, return a JSON response with an appropriate message
+    if (!user) {
+      return res.json({
+        msg: 'Senha ou nome de usuário incorretos',
+        status: false,
+      })
+    }
+    // check if the password that came in the request is the same as the one in the user document database
+    const isPasswordValid = await brcypt.compare(password, user.password)
+    if (!isPasswordValid) {
+      return res.json({
+        msg: 'Senha ou nome de usuário incorretos',
+        status: false,
+      })
+    }
+    delete user.password
+    // if the login is successful, return the status 'true' with the user's document
+    return res.json({ status: true, user })
+  } catch (error) {
+    next(error)
+  }
+}
+```
+
+And so, through the `requests` made in a certain API endpoint, we can `manipulate the data` that are in the database with a series of `conditions and queries`, and thus `send an adequate response to the client`, if such action is valid, and if so insert certain information in the database to `persist this data`.
+
+*<i>mongoosejs.com/docs/api/query.html</i> <br />
+
+<br />
+
+## Web Sockets - Socket.io 
+
+WebSocket is a technology that allows `bidirectional/bilateral communication` over full-duplex channels over a single `Transmission Control Protocol (TCP)` socket. It is designed to run on browsers and web servers that support HTML5, but can be used by any client or application server. The WebSocket API is being standardized by `W3C`; and the `WebSocket protocol` is being standardized by `IETF`. The Websocket protocol is a standalone, TCP-based protocol. Its only relationship to HTTP is that your handshake is interpreted by HTTP servers as an upgrade request.
+
+### URL scheme
+
+The `WebSocket protocol` specification defines two types of URL schemes: `ws`: and `wss`:, for unencrypted and encrypted connections, respectively. In addition to the naming scheme, the rest of the URL components are defined to use generic URI syntax.
+
+### Socket.IO | Integrating Socket.IO into the Application
+
+Socket.IO is a library that enables `low-latency`, `bidirectional` and `event-based communication` between a client and a server.
+
+Socket.IO is composed of two parts:
+
+ - A server that integrates with (or mounts on) the Node.JS HTTP Server socket.io;
+ - A client library that loads on the browser side socket.io-client.
+
+During development, socket.io serves the client automatically for us, as we’ll see, so for now we only have to install one module:
+
+ - `npm install socket.io`
+
+That will install the module and add the dependency to `package.json`. Now let’s edit `index.js` to add it:
+
+```js
+// index.js
+
+import { Server } from 'socket.io'
+
+const server = app.listen(process.env.PORT, () => {
+  console.log(`Server listeing on PORT: ${process.env.PORT}`)
+})
+
+const io = new Server(server, {
+  cors: {
+    origin: process.env.ORIGIN, // front-end application
+    methods: ['GET', 'POST'],
+    transports: ['websocket', 'polling'],
+    credentials: true,
+  },
+})
+
+// Connection with web socket
+io.on('connection', (socket) => {
+  global.chatSocket = socket
+  socket.on('add-user', (userId) => {
+    onlineUsers.set(userId, socket.id)
+  })
+  
+  // ...
+```
+
+Notice that I `initialize a new instance of socket.io` by passing the `server` (the HTTP server) object. Then I listen on the connection event for incoming sockets.
+
+To load the `socket.io-client` that exposes an `io global` we need to install its library:
+
+ - `npm i socket.io-client`
+
+```jsx
+// src/pages/Chat.jsx
+
+import { hostServer } from '../utils/api-routes'
+import { io } from 'socket.io-client'
+// ...
+
+const Chat = () => {
+  const [currentUser, setCurrentUser] = useRecoilState(currentUserState)
+	// ...
+  // the useRef Hook allows you to persist values between renders
+  const socket = useRef()
+  
+  useEffect(() => {
+    async function handleCurrentUser() {
+      if (!localStorage.getItem('mirage-app-user')) {
+        navigate('/login')
+      } else {
+        setCurrentUser(
+          await JSON.parse(localStorage.getItem('mirage-app-user'))
+        )
+      }
+    }
+    handleCurrentUser()
+  }, [searching])
+
+  useEffect(() => {
+   if (currentUser) {
+      socket.current = io(hostServer, {
+        withCredentials: true,
+        reconnectionDelay: 1000,
+        reconnection: true,
+        reconnectionAttempts: 10,
+        transports: ['websocket', 'polling'],
+        agent: false,
+        upgrade: false,
+        rejectUnauthorized: false,
+      }) // CONNECT to web socket server
+      socket.current.emit('add-user', currentUser._id) // emits the EVENT and passes the DATA
+    }
+  }, [currentUser])
+```
+* on the server there is already a socket listening for the `add-user` event
+
+Now that we have access to the `online user ID` via web sockets, we can handle the `message sent` and `message received` events, called `send-msg` and `msg-received` respectively:
+
+```js
+// index.js
+
+socket.on('send-msg', (data) => { // will receive a message and the data of this event
+    console.log(data) 
+    const sendUserSocket = onlineUsers.get(data.to) // get online user with 'to' id value from inside the 'data' object
+    if (sendUserSocket) {
+      socket.to(sendUserSocket).emit('msg-received', data.message) // and so send to 'sendUserSocket' an emission of the 'msg-received' event passing the message data to the frontend
+    }
+  })
+```
+
+On the application front we can manipulate when these events will be triggered and what data we need to send, notice that the server expects a javascript object `data` with the properties `to` and `message` that must be sent from the front, and thus gets the user online with the `id` of `to` and sends only to `sendUserSocket` the `msg-received` event with the event data that should be rendered in the `data.message` front:
+
+```json
+{
+  "to": "6342caaa84614zzz91f7b4a8",
+  "from": "634aaa0dayyy4a3c18f0ffac",
+  "message": "teste"
+}
+```
+* web socket receiving data
+
+```jsx
+const ChatContainer = ({ currentChat, currentUser, socket }) => {
+  const [messages, setMessages] = useState([])
+  const [arrivalMessage, setArrivalMessage] = useState(null)
+  const displayMobile = useRecoilValue(displayMobileSelector)
+  const scrollRef = useRef()
+
+  // sending data to socket and to the database
+  const handleSendMsg = async (msg) => {
+    await axios.post(sendMessageRoute, {
+      from: currentUser._id,
+      to: currentChat._id,
+      message: msg,
+    })
+    socket.current.emit('send-msg', {
+      to: currentChat._id,
+      from: currentUser._id,
+      message: msg,
+    })
+
+    const msgs = [...messages]
+    msgs.push({ fromSelf: true, message: msg })
+    setMessages(msgs)
+  }
+
+  // getting data from socket
+  useEffect(() => {
+    if (socket.current) {
+      socket.current.on('msg-received', (msg) => {
+        console.log(msg);
+        setArrivalMessage({ fromSelf: false, message: msg })
+      })
+    }
+  }, [])
+
+  // updates the message array with the message received from the server
+  useEffect(() => {
+    arrivalMessage && setMessages((prev) => [...prev, arrivalMessage])
+  }, [arrivalMessage])
+  // ...
+  
+  // getting messages from the database
+   useEffect(() => {
+    async function sendMessage() {
+      const response = await axios.get(allMessagesRoute, {
+        params: {
+          from: currentUser._id,
+          to: currentChat._id,
+        },
+      })
+      setMessages(response.data)
+    }
+    sendMessage()
+  }, [currentChat])
+
+// rendering the data
+ return (
+    <>
+      {currentChat && (
+        <Wrapper display={displayMobile}>
+          <div className="chat-header">
+            <div className="user-details">
+              <div className="avatar">
+                <img src={currentChat.avatarImage} alt="user/avatar" />
+              </div>
+              <div className="username">
+                <h3>{currentChat.username}</h3>
+              </div>
+            </div>
+          </div>
+          <div className="chat-messages">
+            {messages.map((message) => (
+              <div ref={scrollRef} key={uuiv4()}>
+                <div
+                  className={`message ${
+                    message.fromSelf ? 'sended' : 'recieved'
+                  }`}
+                >
+                  <div className="content">
+                    <p>{message.message}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          <ChatInput handleSendMsg={handleSendMsg} />
+        </Wrapper>
+      )}
+    </>
+  )
+}
+```
+*<i>socket.io/get-started/chat</i> <br />
+
