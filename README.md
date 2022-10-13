@@ -677,4 +677,85 @@ export const Logout = () => {
 ```
 *<i>developer.mozilla.org/en-US/docs/Web/API/Window/localStorage</i> <br />
 
+<br />
 
+## Styled Components Props and Recoil
+
+`styled-components` is the result of wondering how we could enhance CSS for styling React component systems. By focusing on a single use case we managed to optimize the experience for developers as well as the output for end users.
+
+ - `npm i --save styled-components`
+ 
+In this project I didn't think much about the `component architecture` and thought that it would not be necessary to use some state management library, but as the project got more complex due to the states being passed through higher level component props to the lower, I realized that I needed to implement some `global state management` library, but I didn't want to add `Context API` or `Redux`. That's why I chose `Recoil`, I like the `simple and minimalistic way of Recoil`, with it we can get a global shared state quickly and flexibly.
+
+As I don't intend to get too deep into Recoil and Styled Components, I chose to explain both together and how we can use the power of both to create more `dynamic and flexible` interfaces according to the state of the application.
+
+ - `npm i recoil`
+ 
+## Atoms
+
+Atoms are `units of state`. They're updatable and subscribable: when an atom is updated, each subscribed component is re-rendered with the new value. They can be created at runtime, too. Atoms can be used in place of React local component state. `If the same atom is used from multiple components, all those components share their state`.
+
+Atoms are created using the atom function:
+
+```jsx
+// atoms/chatAppAtom.js
+
+// const [key, setKey] = useState(default)
+export const menuItemActiveState = atom({
+  key: 'menuItemActiveState',
+  default: 'HOME',
+})
+
+export const displayMobileSelector = selector({
+  key: 'displayMobileSelector',
+  get: ({get}) => { // get the current value of some atom
+    const itemActive = get(menuItemActiveState)
+    const displayMobile = itemActive === 'CHAT' ? 'none' : 'grid'
+    return displayMobile
+  }
+})
+```
+* This is a state that will only be needed on mobile layout
+
+Now in order to access the value of the atoms with the components we need to import two recoil functions: `useRecoilValue` to read the state or `useRecoilState` to read and write.
+
+Note that the value of the atom `displayMobileSelector` is already self-modified according to the state of the atom `menuItemActiveState`, so we only need to access its value, as for `menuItemActiveState`, its value is changed inside the `Menu` component with `setMenuItemActive`.
+
+And with the value of `displayMobile` we can pass it via props in a Styled Components and only for small and medium sized devices we can change the value of styling properties of this component `"grid" | "none"`:
+
+```jsx
+// src/components/ChatContainer.jsx
+
+import { useRecoilValue } from 'recoil'
+import { displayMobileSelector } from '../../atoms/chatAppAtom'
+
+const ChatContainer = ({ currentChat, currentUser, socket }) => {
+  const displayMobile = useRecoilValue(displayMobileSelector)
+  
+  // ...
+  return (
+    <>
+      {currentChat && (
+        <Wrapper display={displayMobile}>
+          <div className="chat-header">
+            // ...
+          </div>
+          <ChatInput handleSendMsg={handleSendMsg} />
+        </Wrapper>
+      )}
+    </>
+  )
+}
+
+const Wrapper = styled.div`
+  display: grid;
+  grid-template-rows: 15% 65% 20%;
+  gap: 0.1rem;
+  background-color: #17181a;
+  overflow: hidden;
+  @media screen and (min-width: 0px) and (max-width: 800px) {
+    display: ${(props) => props.display};
+    width: 100%;
+  }
+  // ...
+```
