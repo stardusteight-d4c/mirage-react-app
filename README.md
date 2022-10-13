@@ -11,7 +11,7 @@
 :arrow_right: Express | Creating an Application Programming Interface (API) with ES6 Modules <br />
 :arrow_right: Mongoose and MongoDB - Configure the Database <br />
 :arrow_right: Web Sockets - Socket.io <br />
-:arrow_right: Localstorage and Sessions <br />
+:arrow_right: LocalStorage and Sessions <br />
 :arrow_right: Styled Components Props <br />
 :arrow_right: Docker and Containers <br />
 :arrow_right: Cloud Computing - Amazon Lighsail <br />
@@ -598,4 +598,83 @@ const ChatContainer = ({ currentChat, currentUser, socket }) => {
 }
 ```
 *<i>socket.io/get-started/chat</i> <br />
+
+<br />
+
+## LocalStorage and Sessions 
+
+The `localStorage` property allows accessing a local Storage object. localStorage is similar to sessionStorage. The only difference is that while `data stored in localStorage does not expire`, data in sessionStorage is cleared when the page session expires — that is, when the page (tab or window) is closed.
+
+In order to create a session for the user so that we can identify him with his credentials, we must establish a `persistent object` in his browser which will be placed in `localStorage` through `setItem` as soon as the user registers or enters the application. First we must pass the name of this `storage/object` which will be called `mirage-app-user`, and the second argument is the `data itself`. A check is also made to block such a route if the user already has a session created, the same process is done on the login page:
+
+```jsx
+// src/pages/Register.jsx
+
+useEffect(() => {
+  if (localStorage.getItem('mirage-app-user')) {
+    navigate('/')
+  }
+}, [])
+
+const handleSubmit = async (event) => {
+  event.preventDefault()
+  if (handleValidation()) {
+    const { username, email, password } = values
+    const { data } = await axios.post(registerRoute, {
+      username,
+      email,
+      password,
+    })
+    if (data.status === false) {
+      toast.error(data.msg, toastOptions)
+    }
+    if (data.status === true) {
+      localStorage.setItem('mirage-app-user', JSON.stringify(data.user))
+      navigate('/')
+    }
+  }
+}
+```
+
+So on the chat page we can get the user's session credentials with `getItem`:
+
+```jsx
+// src/pages/Chat.jsx
+
+useEffect(() => {
+  async function handleCurrentUser() {
+    if (!localStorage.getItem('mirage-app-user')) {
+      navigate('/login')
+    } else {
+      setCurrentUser(
+        await JSON.parse(localStorage.getItem('mirage-app-user'))
+      )
+    }
+  }
+  handleCurrentUser()
+}, [])
+```
+
+If the user wants to end their session, just clear the localStorage:
+
+```jsx
+// src/components/Logout.jsx
+
+export const Logout = () => {
+  const navigate = useNavigate()
+
+  const handleLogout = async () => {
+    localStorage.clear()
+    navigate('/login')
+  }
+
+  return (
+    <Button onClick={() => handleLogout()}>
+      <BiPowerOff />
+    </Button>
+  )
+}
+```
+*<i>developer.mozilla.org/en-US/docs/Web/API/Window/localStorage</i> <br />
+
 
