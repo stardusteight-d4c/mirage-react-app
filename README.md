@@ -691,7 +691,7 @@ As I don't intend to get too deep into Recoil and Styled Components, I chose to 
 
  - `npm i recoil`
  
-## Atoms
+### Atoms
 
 Atoms are `units of state`. They're updatable and subscribable: when an atom is updated, each subscribed component is re-rendered with the new value. They can be created at runtime, too. Atoms can be used in place of React local component state. `If the same atom is used from multiple components, all those components share their state`.
 
