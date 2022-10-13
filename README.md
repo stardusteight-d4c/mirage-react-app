@@ -13,8 +13,8 @@
 :arrow_right: Web Sockets - Socket.io <br />
 :arrow_right: LocalStorage and Sessions <br />
 :arrow_right: Styled Components Props <br />
-:arrow_right: Docker and Containers <br />
-:arrow_right: Cloud Computing - Amazon Lighsail <br />
+:arrow_right: Docker, Docker Engine and Docker Hub <br />
+:arrow_right: Amazon Lightsail - Cloud Computing <br />
 
 ###### Behance layout inspirations
 
@@ -838,7 +838,7 @@ CMD [ "node", "index.js" ]
 
 <br />
 
-## Amazon Lightsail
+## Amazon Lightsail - Cloud Computing
 
 Amazon Lightsail is a `virtual private server (VPS) provider` and the easiest way to get started with AWS for developers, small businesses, students, and other users who need a solution to `build and host their applications in the cloud. `. Lightsail provides developers with computing, storage and networking capabilities and capabilities to `deploy and manage websites and web applications in the cloud`. Lightsail includes everything you need to quickly get your project started – `virtual machines`, `containers`, `databases`, `CDN`, `load balancers`, `DNS management` etc. All this for a low, predictable monthly price.
 
