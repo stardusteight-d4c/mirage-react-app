@@ -761,3 +761,97 @@ const Wrapper = styled.div`
 ```
 *<i>styled-components.com/docs/basics</i> <br />
 *<i>recoiljs.org</i> <br />
+
+<br />
+
+## Docker, Docker Engine and Docker Hub 
+
+Docker is a set of `platform as a service (PaaS)` products that use `operating system-level virtualization` to `deliver software in packages called containers`. Containers are isolated from each other and bundle their own software, libraries, and configuration files. They can communicate with each other through well-defined channels. All containers are run by a single operating system kernel and therefore use less resources than virtual machines.
+
+The service has both free and premium tiers. The software that hosts the containers is called the `Docker Engine`. It was started in 2013 and is developed by Docker, Inc.
+
+* `Docker Engine` is the core of Docker, the underlying client-server technology that builds and runs containers.
+* `Container` is an isolated environment, arranged on a server, which shares a single control host.
+* `Docker Hub` is a registry used to host and download various images. It can be seen as a SAAS image sharing and management platform.
+* `Images` is a template that will be used by your container. It defines what will run there, which libraries and settings will be present in your container.
+* `Dockerfile` A text file containing a simple syntax for creating new images.
+
+Docker is a virtualization alternative in which the host machine's kernel is shared with the virtualized machine or the software in operation, so a developer can add to his software the possibility of taking the libraries and other dependencies of his program along with the software with less performance loss than hardware virtualization of a full server. Thus, `Docker makes operations on an infrastructure such as web services more interchangeable, efficient and flexible`.
+
+According to a review by 451 Research, "Docker is a tool that can `package an application and its dependencies into a virtual container that can run on any Linux server`. This helps `allow flexibility and portability of where the application can be executed, whether on premises, public cloud, private cloud, among others.`"
+
+### What is Dockerfile ?
+
+The `Dockerfile` is nothing more than a means we use to create our own images. In other words, it serves as `the recipe for building a container`, allowing to define a `custom environment` for my personal or business project.
+
+There is still another very interesting point that should be explored (I see many people confuse when they are still learning) to better understand the concept and start to understand the Dockerfile more deeply: what exactly is the difference between a container and an image?
+
+### Image x Container
+
+An `image is nothing more than an immutable representation of how a container will actually be built`. Because of this, `we don't run or initialize images`, we do it with `containers`.
+
+The point we have to understand now is this: `we write a Dockerfile`, `build an image` from it by running the `docker build` command, and finally `build and run the container` with the `docker command run`. The container is the end while the image is the means.
+
+### Dockerizing a Node.js web app
+
+Docker allows you to package an application with its environment and all of its dependencies into a `box`, called a container. Usually, a container consists of an application running in a stripped-to-basics version of a Linux operating system. An image is the `blueprint for a container`, `a container is a running instance of an image`.
+
+
+```markdown
+# GET THE IMAGE OF NODE v16 
+FROM node:16
+
+# Create app directory
+WORKDIR /usr/src/app
+
+# COPY file of dependencies and INSTALL 
+# A wildcard (*) is used to ensure both package.json AND package-lock.json are copied
+COPY package*.json ./
+RUN npm install
+# If you are building your code for production
+RUN npm ci --only=production
+
+# Bundle app source
+COPY . .
+
+EXPOSE 5000
+CMD [ "node", "index.js" ]
+## start the server -> node index.js
+
+# docker login -u stardusteightt (with DockerHub account)
+# In this directory -> docker build . -t stardusteightt/mirage-chat-server (<usernameInDockerHub>/<ImageRepository>)
+# docker images
+# docker run -d -p 8080:5000 stardusteightt/mirage-chat-server:latest
+# or docker run -p 5000:5000 stardusteightt/mirage-chat-server:latest (if EXPOSE = 5000)
+# http://localhost:5000/api/auth/allUsers/6340ba7c11f8c41c57a5f4b8
+
+# docker ps (list processes)
+# docker kill <container id> (shut down the image)
+# docker stop $(docker container ls -q) (stop all processes)
+
+## upload to a repository
+# docker push stardusteightt/mirage-chat-server:1.3
+```
+*<i>en.wikipedia.org/wiki/Docker_(software)</i> <br />
+*<i>nodejs.org/en/docs/guides/nodejs-docker-webapp</i> <br />
+*<i>alura.com.br/artigos/desvendando-o-dockerfile</i> <br />
+
+<br />
+
+## Amazon Lightsail
+
+Amazon Lightsail is a `virtual private server (VPS) provider` and the easiest way to get started with AWS for developers, small businesses, students, and other users who need a solution to `build and host their applications in the cloud. `. Lightsail provides developers with computing, storage and networking capabilities and capabilities to `deploy and manage websites and web applications in the cloud`. Lightsail includes everything you need to quickly get your project started – `virtual machines`, `containers`, `databases`, `CDN`, `load balancers`, `DNS management` etc. All this for a low, predictable monthly price.
+
+###### What is a virtual private server?
+
+A virtual private server, also called an ʻinstance`, allows users to run websites and web applications in `a highly secure and available environment that remains cost-effective`.
+
+###### What are the benefits of a VPS?
+
+There are many benefits to using a virtual private server, including `affordable`, `scalability`, `security` and `customizable features`.
+
+*<i>aws.amazon.com/lightsail/faq</i> <br />
+
+Having your image hosted in a repository on Docker Hub is easy to have it deployed in a container on Amazon Lightsail.
+
+![lighrsail](lightsail.png)
