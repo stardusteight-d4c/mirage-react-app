@@ -116,7 +116,7 @@ app.use(express.json())
 
 // starts a UNIX socket and listens for connections in a given path.
 const server = app.listen(process.env.PORT, () => {
-  console.log(`Server listeing on PORT: ${process.env.PORT}`)
+  console.log(`Server listening on PORT: ${process.env.PORT}`)
 })
 ```
 
